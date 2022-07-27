@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'dart:convert';
+
+import 'package:flutter_camera/datas/configModel.dart';
+import 'package:flutter_camera/pages/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,6 +54,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _active = false;
+  @override
+  void initState() {
+    super.initState();
+    getHttp();
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -74,7 +86,11 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset("assets/images/ic_bb_op.png", height: 100.0),
+                  Opacity(
+                    opacity: _active ? 1.0 : 0.0,
+                    child: Image.asset("assets/images/ic_bb_op.png",
+                        height: 100.0),
+                  ),
                   Container(
                     height: 50.0,
                     color: Colors.amber,
@@ -86,7 +102,30 @@ class _MyHomePageState extends State<MyHomePage> {
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  void getHttp() async {
+    try {
+      var response = await Dio().get('https://funge.fun/config');
+      var data = response.data.toString().replaceRange(1, 2, "");
+
+      List<int> bytes2 = base64Decode(data);
+      String decodeStr = String.fromCharCodes(bytes2);
+      var config =
+          ConfigModel.fromJson(json.decode(decodeStr) as Map<String, dynamic>);
+
+      if (config.l == 0) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return HomePage();
+        }));
+      } else {
+        setState(() {});
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }
+
 
 
 // Scaffold(

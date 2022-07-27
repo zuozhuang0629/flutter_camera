@@ -25,7 +25,29 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+
+// def keystorePropertiesFile = rootProject.file("key.properties")
+// def keystoreProperties = new Properties()
+// keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+
 android {
+
+    //  signingConfigs {
+    //     release {
+    //         keyAlias 'caapps'  
+    //         keyPassword 'mmasns'
+    //         storeFile file('/Users/huangyisheng/Desktop/codes/keys/keys/20220727moldasanp') 
+    //         storePassword 'mmasns'
+    //     }
+    // }
+
+    // buildTypes {
+    //     release {
+    //         signingConfig signingConfigs.release
+    //     }
+    // }
+
     compileSdkVersion flutter.compileSdkVersion
 
     compileOptions {
