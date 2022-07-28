@@ -64,6 +64,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.flutter_camera"
         minSdkVersion flutter.minSdkVersion
@@ -87,4 +88,13 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.multidex:multidex:2.0.1"
+    api 'com.applovin:applovin-sdk:11.4.4'
+    api 'com.applovin.mediation:adcolony-adapter:+'
+    api 'com.applovin.mediation:inmobi-adapter:+'
+    api 'com.squareup.picasso:picasso:2.71828'
+    api 'androidx.recyclerview:recyclerview:1.1.0'
+    api 'com.applovin.mediation:facebook-adapter:+'
+    api 'com.applovin.mediation:tapjoy-adapter:+'
+    api 'com.applovin.mediation:vungle-adapter:+'
 }
