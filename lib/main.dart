@@ -118,7 +118,9 @@ class _MyHomePageState extends State<MyHomePage> {
           return HomePage();
         }));
       } else {
-        setState(() {});
+        setState(() {
+          _active = true;
+        });
       }
     } catch (e) {
       print(e);
