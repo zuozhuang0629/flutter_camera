@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
+import 'dart:io' show Platform;
 
 import 'package:flutter_camera/datas/configModel.dart';
+import 'package:flutter_camera/dialogs/login_dialog.dart';
 import 'package:flutter_camera/pages/home.dart';
+import 'package:applovin_max/applovin_max.dart';
+import 'package:flutter_camera/widgets/image_click.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+String _banner_ad_unit_id = "10424d6678069178";
+
+void initializeBannerAds() {
+  AppLovinMAX.createBanner(_banner_ad_unit_id, AdViewPosition.bottomCenter);
 }
 
 class MyApp extends StatelessWidget {
@@ -58,17 +68,29 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    initializePlugin();
     getHttp();
+  }
+
+  Future<void> initializePlugin() async {
+    logStatus("Initializing SDK...");
+
+    Map? configuration = await AppLovinMAX.initialize(
+        "RH7xIMirQp-k9XpQo6fmPQgzvCNPd1VTpxsoG4eyyoz2-fkg4HgvP7tWttcTng2iC9vnT4Mvp7Gi_69V2xZxPX");
+    if (configuration != null) {
+      logStatus("SDK Initialized: $configuration");
+      initializeBannerAds();
+
+      AppLovinMAX.showBanner(_banner_ad_unit_id);
+    }
+  }
+
+  void logStatus(String status) {
+    print(status);
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       body: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
@@ -82,25 +104,46 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Positioned(
-            bottom: 0.0,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Opacity(
-                    opacity: _active ? 1.0 : 0.0,
-                    child: Image.asset("assets/images/ic_bb_op.png",
-                        height: 100.0),
-                  ),
-                  Container(
-                    height: 50.0,
-                    color: Colors.amber,
-                  )
-                ]),
+            bottom: 60.0,
+            child: InkWell(
+              // When the user taps the button, show a snackbar.
+              onTap: () {
+                AppLovinMAX.hideBanner(_banner_ad_unit_id);
+                showLoginDialog();
+              },
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Opacity(
+                      opacity: 1.0,
+                      child: Image.asset("assets/images/ic_bb_op.png",
+                          height: 100.0),
+                    ),
+                  ]),
+            ),
           ),
         ]),
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  // Future<bool?> showLoginDialog() {
+  //   return showDialog<bool>(
+
+  //     context: context,
+  //     builder: (context) {
+  //       return LoginDialog();
+  //     },
+  //   );
+  // }
+
+  Future<bool?> showLoginDialog() {
+    return showModalBottomSheet<bool>(
+        context: context,
+        builder: (context) {
+          return LoginDialog();
+        });
   }
 
   void getHttp() async {
@@ -114,9 +157,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ConfigModel.fromJson(json.decode(decodeStr) as Map<String, dynamic>);
 
       if (config.l == 0) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return HomePage();
-        }));
+        // Navigator.push(context, MaterialPageRoute(builder: (context) {
+        //   return HomePage();
+        // }));
       } else {
         setState(() {
           _active = true;
@@ -127,18 +170,3 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 }
-
-
-
-// Scaffold(
-//       body: ConstrainedBox(
-//         constraints: const BoxConstraints.expand(),
-//         child: Stack(alignment: Alignment.topLeft, children: <Widget>[
-//           Image.network(
-//             'https://images.pexels.com/photos/3538558/pexels-photo-3538558.jpeg?auto=compress&cs=tinysrgb&w=400',
-//             fit: BoxFit.fill,
-//           ),
-//         ]),
-//       ),
-//       // This trailing comma makes auto-formatting nicer for build methods.
-//     )
