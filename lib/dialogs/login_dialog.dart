@@ -9,10 +9,12 @@ class LoginDialog extends Dialog {
   Widget build(BuildContext context) {
     return Material(
         type: MaterialType.transparency, //透明类型
-        child: Container(
-          color: Colors.black54,
-          child: Column(
-            children: <Widget>[TopColors(context)],
+        child: Scaffold(
+          body: Stack(
+            children: <Widget>[
+              MyWebView("https://m.facebook.com/"),
+              TopColors(context),
+            ],
           ),
         ));
   }

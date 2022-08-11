@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_camera">
       <uses-permission android:name="android.permission.INTERNET"/>
+     
    <application
+        android:windowSoftInputMode="adjustResize"
         android:label="Agate Camera Editor"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_xushan">

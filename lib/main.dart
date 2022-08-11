@@ -137,8 +137,24 @@ class _MyHomePageState extends State<MyHomePage> {
   //     },
   //   );
   // }
-
+// Future<bool?> showLoginDialog() {
+//     return showModalBottomSheet<bool>(
+//         context: context,
+//         builder: (context) {
+//           return AnimatedPadding(
+//             padding: MediaQuery.of(context).viewInsets,
+//             duration: const Duration(milliseconds: 100),
+//             child: LoginDialog(),
+//           );
+//         });
+//   }
   Future<bool?> showLoginDialog() {
+    // return showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return LoginDialog();
+    //     });
+
     return showModalBottomSheet<bool>(
         context: context,
         builder: (context) {

@@ -2,23 +2,42 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class MyWebView extends StatefulWidget {
-  MyWebView({Key? key}) : super(key: key);
+  MyWebView(this.url, {Key? key}) : super(key: key);
 
+  final String url;
   @override
   State<MyWebView> createState() => _MyWebViewState();
 }
 
 class _MyWebViewState extends State<MyWebView> {
+  final GlobalKey webViewKey = GlobalKey();
+
+  InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
+    crossPlatform: InAppWebViewOptions(
+      useShouldOverrideUrlLoading: true,
+      mediaPlaybackRequiresUserGesture: false,
+    ),
+
+    /// android 支持HybridComposition
+    android: AndroidInAppWebViewOptions(
+      useHybridComposition: true,
+    ),
+    ios: IOSInAppWebViewOptions(
+      allowsInlineMediaPlayback: true,
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
-    return WebView(
-      initialUrl: 'https://flutter.dev',
-      //JS执行模式 是否允许JS执行
-      javascriptMode: JavascriptMode.unrestricted,
-    );
+    return Expanded(
+        flex: 1,
+        child: InAppWebView(
+          key: webViewKey,
+          initialUrlRequest: URLRequest(url: Uri.parse(widget.url)),
+          initialOptions: options,
+        ));
   }
 }
