@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 
 import '../widgets/webview_flutter.dart';
 
-class LoginDialog extends Dialog {
+class LoginDialog extends StatefulWidget {
   LoginDialog({Key? key}) : super(key: key);
 
   @override
+  State<LoginDialog> createState() => _LoginDialogState();
+}
+
+class _LoginDialogState extends State<LoginDialog> {
+  @override
   Widget build(BuildContext context) {
-    return Material(
-        type: MaterialType.transparency, //透明类型
-        child: Scaffold(
-          body: Stack(
+    return Stack(
             children: <Widget>[
               MyWebView("https://m.facebook.com/"),
               TopColors(context),
             ],
-          ),
-        ));
+          );
   }
 }
+ 
 
 class TopColors extends StatefulWidget {
   BuildContext loginDialog;

@@ -156,9 +156,15 @@ class _MyHomePageState extends State<MyHomePage> {
     //     });
 
     return showModalBottomSheet<bool>(
+        isScrollControlled: true,
+        isDismissible: false,
+        enableDrag: false,
         context: context,
         builder: (context) {
-          return LoginDialog();
+          return SizedBox(
+            height: 500,
+            child: LoginDialog(),
+          );
         });
   }
 
