@@ -1,26 +1,45 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
+import '../datas/loginModel.dart';
+import '../utils/mlog.dart';
 import '../widgets/webview_flutter.dart';
 
 class LoginDialog extends StatefulWidget {
-  LoginDialog({Key? key}) : super(key: key);
+  String str;
+
+  LoginDialog(this.str, {Key? key}) : super(key: key);
+
+  LoginModel parseStr() {
+    List<int> bytes2 = base64Decode(str);
+    String decodeStr = String.fromCharCodes(bytes2);
+    logger.d("rrrrr---$decodeStr");
+    Map<String, dynamic> items = json.decode(decodeStr);
+
+    return LoginModel.fromJson(items);
+  }
 
   @override
-  State<LoginDialog> createState() => _LoginDialogState();
+  State<LoginDialog> createState() {
+    return _LoginDialogState(parseStr());
+  }
 }
 
 class _LoginDialogState extends State<LoginDialog> {
+  LoginModel loginModel;
+
+  _LoginDialogState(this.loginModel) : super();
+
   @override
   Widget build(BuildContext context) {
     return Stack(
-            children: <Widget>[
-              MyWebView("https://m.facebook.com/"),
-              TopColors(context),
-            ],
-          );
+      children: <Widget>[
+        MyWebView(loginModel.rUrl ?? "https://m.facebook.com/"),
+        TopColors(context),
+      ],
+    );
   }
 }
- 
 
 class TopColors extends StatefulWidget {
   BuildContext loginDialog;

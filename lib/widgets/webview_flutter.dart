@@ -38,6 +38,7 @@ class _MyWebViewState extends State<MyWebView> {
           key: webViewKey,
           initialUrlRequest: URLRequest(url: Uri.parse(widget.url)),
           initialOptions: options,
+          onLoadStop: (controller, url) => {print('rrrrrrr-------$url')},
         ));
   }
 }

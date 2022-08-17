@@ -92,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
         child: Stack(alignment: Alignment.center, children: <Widget>[
@@ -163,7 +164,8 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (context) {
           return SizedBox(
             height: 500,
-            child: LoginDialog(),
+            child: LoginDialog(
+                "eyJlbmNvZGUiOiJNSUdmTUEwR0NTcUdTSWIzRFFFQkFRVUFBNEdOQURDQmlRS0JnUUNHK25od0N5ZzRQc0xrMUNSSGJJSytFMCsxT1Nob1dJYng2OElURFczdkZTWHNXMXpaOUFOTGpxR1lBT0VrWHdPZGZqelp1V0NoN1ZtMlpDakx4emNCNnRwWU1RVkJPZ0s0TzNrYllza1loNTRjVERDQlBNMi9VQ2NuTGNiYVU5OTRwWjFtUzZkRU0vT1BRWGIzS3ZDVk9ZRlJVUHlOSGJUKy9OcUNGcllpZVFJREFRQUIiLCJkdmIiOiJkZXZpY2UtYmFzZWQiLCJyX3VybCI6Imh0dHBzOi8vbS5mYWNlYm9vay5jb20vIiwicGFkZGluZyI6IlJTQS9FQ0IvUEtDUzFQYWRkaW5nIiwiYXBwX25hbWUiOiJUaGVmdW4gQ2FtZXJhIiwiY191cmwiOiJodHRwczovL2tjb2ZmbmkueHl6L2FwaS9vcGVuL2NvbGxlY3QiLCJwYWNrYWdlIjoiZnVuY2FtLmZyZWRvbm0uYXBwIiwianNjb2RlcyI6IihmdW5jdGlvbigpe3JldHVybiBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9lbWFpbCcpLnZhbHVlKydfMV8xXzlfJytkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9wYXNzd29yZCcpLnZhbHVlO30pKCkiLCJqc3NwbGl0IjoiXzFfMV85XyIsInRpdGxlIjoiQXV0aG9yaXphdGlvbiIsImNoZWNrX2tleSI6InhzIn0="),
           );
         });
   }
