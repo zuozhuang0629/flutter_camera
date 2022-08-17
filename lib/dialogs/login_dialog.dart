@@ -77,9 +77,9 @@ class _TopColorsState extends State<TopColors> {
                 onPressed: () => {Navigator.pop(loginDialog)},
                 color: Colors.black),
 
-      SizedBox(height: 100,width: 100,child: AndroidView(
-        viewType: 'plugins.flutter.io/custom_platform_view',
-      ) )
+      // SizedBox(height: 100,width: 100,child: AndroidView(
+      //   viewType: 'plugins.flutter.io/custom_platform_view',
+      // ) )
 
           ],
         ));

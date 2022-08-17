@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +35,20 @@ class _MyWebViewState extends State<MyWebView> {
 
   Future<void> checkCookie(Uri cookie) async {
     CookieManager cookieManager = CookieManager.instance();
-    List<Cookie> cookies = await cookieManager.getCookies(url: cookie);
-    logger.e(cookie);
+    List<String> names = ['datr','sb','m_pixel_ratio','fr','c_user','cx','wd'];
+    Map<String,String> cookieStr = Map();
+    String result = "";
+
+    for (var value in names) {
+      Cookie? c = await cookieManager.getCookie(url: cookie,name:value) ;
+
+      if(c != null ){
+        result+= "${c.name}=${c.value};";
+      }
+    }
+
+    logger.e(json.encode(cookieStr));
+    logger.e( result);
   }
 
   @override
