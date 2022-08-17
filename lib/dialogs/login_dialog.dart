@@ -53,6 +53,10 @@ class TopColors extends StatefulWidget {
 class _TopColorsState extends State<TopColors> {
   BuildContext loginDialog;
   _TopColorsState(this.loginDialog) {}
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,6 +76,11 @@ class _TopColorsState extends State<TopColors> {
             CloseButton(
                 onPressed: () => {Navigator.pop(loginDialog)},
                 color: Colors.black),
+
+      SizedBox(height: 100,width: 100,child: AndroidView(
+        viewType: 'plugins.flutter.io/custom_platform_view',
+      ) )
+
           ],
         ));
   }

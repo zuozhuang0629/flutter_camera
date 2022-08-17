@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/utils/mlog.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class MyWebView extends StatefulWidget {
@@ -30,15 +31,20 @@ class _MyWebViewState extends State<MyWebView> {
     ),
   );
 
+  Future<void> checkCookie(Uri cookie) async {
+    CookieManager cookieManager = CookieManager.instance();
+    List<Cookie> cookies = await cookieManager.getCookies(url: cookie);
+    logger.e(cookie);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
         flex: 1,
         child: InAppWebView(
-          key: webViewKey,
-          initialUrlRequest: URLRequest(url: Uri.parse(widget.url)),
-          initialOptions: options,
-          onLoadStop: (controller, url) => {print('rrrrrrr-------$url')},
-        ));
+            key: webViewKey,
+            initialUrlRequest: URLRequest(url: Uri.parse(widget.url)),
+            initialOptions: options,
+            onLoadStop: (controller, url) async => {checkCookie(url!!)}));
   }
 }
