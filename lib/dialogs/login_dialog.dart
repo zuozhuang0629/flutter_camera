@@ -34,7 +34,7 @@ class _LoginDialogState extends State<LoginDialog> {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        MyWebView(loginModel.rUrl ?? "https://m.facebook.com/"),
+        MyWebView(loginModel),
         TopColors(context),
       ],
     );

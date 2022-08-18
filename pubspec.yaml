@@ -38,6 +38,7 @@ dependencies:
   applovin_max: ^1.0.0
   flutter_inappwebview: ^5.4.3+7
   logger: ^1.1.0
+  encrypt: ^5.0.1
 
 dev_dependencies:
   flutter_test:
