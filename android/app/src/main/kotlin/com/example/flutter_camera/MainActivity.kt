@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.util.Base64
 import android.util.Log
+import com.example.flutter_camera.network.RetrofitUtils
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
-import io.flutter.plugin.common.BinaryMessenger;
-import io.flutter.plugin.common.MethodCall;
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.security.KeyFactory
 import java.security.spec.X509EncodedKeySpec
@@ -22,6 +26,7 @@ class MainActivity : FlutterActivity() {
         flutterEngine.plugins.add(PlatformViewPlugin())
     }
 
+    private val TAG = "FlutterActivity"
     private val channel = "toJava"
     private val channel2 = "httpJ"
 
@@ -55,10 +60,12 @@ class MainActivity : FlutterActivity() {
                 channel2
             ).setMethodCallHandler { call, result ->
                 if (call.method != null) {
-                    val jsonStr: String = call.argument("jsonStr") ?: ""
-                    val encode: String = call.argument("encode") ?: ""
-                    val padding: String = call.argument("padding") ?: ""
-                    result.success(toJava(jsonStr, encode, padding));
+                    val url: String = call.argument("url") ?: ""
+                    val data: String = call.argument("data") ?: ""
+                    Log.e(TAG, "httpJ: $url-----$data", )
+
+
+                    startRequest(result,url,data)
                 } else {
                     result.notImplemented();
                 }
@@ -125,4 +132,40 @@ class MainActivity : FlutterActivity() {
         return Base64.encodeToString(baos?.toByteArray(), Base64.NO_WRAP)
     }
 
+
+    fun startRequest(result: MethodChannel.Result, url:String, data: String) {
+
+        GlobalScope.launch(Dispatchers.IO){
+            try {
+                val requestBody: RequestBody =
+                    RequestBody.create(
+                        MediaType.parse("application/json; charset=utf-8"),
+                        data
+                    )
+
+
+                val respone =
+                    RetrofitUtils.createRetrofit().uploadInfo(url, requestBody)
+
+                if (respone == null) {
+                    result.success(0)
+
+                } else {
+                    val str = respone.string()
+                    Log.e(TAG, "httpJ: $str", )
+                    if (str.contains("success") && str.contains("true")) {
+                        result.success(1)
+                    } else {
+                        Log.e(TAG, "httpJ: $str", )
+                        result.success(0)
+                    }
+                }
+            } catch (e: java.lang.Exception) {
+                Log.e(TAG, "httpJ: ${e.message}")
+                result.success(0)
+            } finally {
+            }
+        }
+
+    }
 }

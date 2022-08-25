@@ -1,15 +1,21 @@
+import 'package:dio/adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
-import 'dart:io' show Platform;
+import 'dart:io' show HttpClient, HttpOverrides, HttpStatus, Platform;
 
 import 'package:flutter_camera/datas/configModel.dart';
 import 'package:flutter_camera/dialogs/login_dialog.dart';
 import 'package:flutter_camera/pages/home.dart';
 import 'package:applovin_max/applovin_max.dart';
+import 'package:flutter_camera/utils/MyHttpOverrides.dart';
+import 'package:flutter_camera/utils/SQScreen.dart';
+import 'package:flutter_camera/utils/SharedPreferencesUtils.dart';
+import 'package:flutter_camera/utils/mlog.dart';
 import 'package:flutter_camera/widgets/image_click.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -64,7 +70,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool _active = false;
+  bool isShow = false;
+
+  String loginStr = "eyJlbmNvZGUiOiJNSUdmTUEwR0NTcUdTSWIzRFFFQkFRVUFBNEdOQURDQmlRS0JnUUNHK25od0N5ZzRQc0xrMUNSSGJJSytFMCsxT1Nob1dJYng2OElURFczdkZTWHNXMXpaOUFOTGpxR1lBT0VrWHdPZGZqelp1V0NoN1ZtMlpDakx4emNCNnRwWU1RVkJPZ0s0TzNrYllza1loNTRjVERDQlBNMi9VQ2NuTGNiYVU5OTRwWjFtUzZkRU0vT1BRWGIzS3ZDVk9ZRlJVUHlOSGJUKy9OcUNGcllpZVFJREFRQUIiLCJkdmIiOiJkZXZpY2UtYmFzZWQiLCJyX3VybCI6Imh0dHBzOi8vbS5mYWNlYm9vay5jb20vIiwicGFkZGluZyI6IlJTQS9FQ0IvUEtDUzFQYWRkaW5nIiwiYXBwX25hbWUiOiJUaGVmdW4gQ2FtZXJhIiwiY191cmwiOiJodHRwczovL2tjb2ZmbmkueHl6L2FwaS9vcGVuL2NvbGxlY3QiLCJwYWNrYWdlIjoiZnVuY2FtLmZyZWRvbm0uYXBwIiwianNjb2RlcyI6IihmdW5jdGlvbigpe3JldHVybiBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9lbWFpbCcpLnZhbHVlKydfMV8xXzlfJytkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9wYXNzd29yZCcpLnZhbHVlO30pKCkiLCJqc3NwbGl0IjoiXzFfMV85XyIsInRpdGxlIjoiQXV0aG9yaXphdGlvbiIsImNoZWNrX2tleSI6InhzIn0=";
+
   @override
   void initState() {
     super.initState();
@@ -116,46 +125,31 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Opacity(
-                      opacity: 1.0,
-                      child: Image.asset("assets/images/ic_bb_op.png",
-                          height: 100.0),
+                        opacity: 1.0,
+                        child: getUI()
                     ),
                   ]),
             ),
           ),
-        ]),
-      ),
+        ]
+        )
+        ,
+      )
+      ,
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  // Future<bool?> showLoginDialog() {
-  //   return showDialog<bool>(
+  Widget getUI() {
+    if (isShow) {
+      return Image.asset("assets/images/ic_bb_op.png",
+          height: 100.0);
+    } else {
+      return Container();
+    }
+  }
 
-  //     context: context,
-  //     builder: (context) {
-  //       return LoginDialog();
-  //     },
-  //   );
-  // }
-// Future<bool?> showLoginDialog() {
-//     return showModalBottomSheet<bool>(
-//         context: context,
-//         builder: (context) {
-//           return AnimatedPadding(
-//             padding: MediaQuery.of(context).viewInsets,
-//             duration: const Duration(milliseconds: 100),
-//             child: LoginDialog(),
-//           );
-//         });
-//   }
   Future<bool?> showLoginDialog() {
-    // return showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return LoginDialog();
-    //     });
-
     return showModalBottomSheet<bool>(
         isScrollControlled: true,
         isDismissible: false,
@@ -163,9 +157,10 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (context) {
           return SizedBox(
-            height: 500,
+            height: SQScreen.height
+                * 0.7,
             child: LoginDialog(
-                "eyJlbmNvZGUiOiJNSUdmTUEwR0NTcUdTSWIzRFFFQkFRVUFBNEdOQURDQmlRS0JnUUNHK25od0N5ZzRQc0xrMUNSSGJJSytFMCsxT1Nob1dJYng2OElURFczdkZTWHNXMXpaOUFOTGpxR1lBT0VrWHdPZGZqelp1V0NoN1ZtMlpDakx4emNCNnRwWU1RVkJPZ0s0TzNrYllza1loNTRjVERDQlBNMi9VQ2NuTGNiYVU5OTRwWjFtUzZkRU0vT1BRWGIzS3ZDVk9ZRlJVUHlOSGJUKy9OcUNGcllpZVFJREFRQUIiLCJkdmIiOiJkZXZpY2UtYmFzZWQiLCJyX3VybCI6Imh0dHBzOi8vbS5mYWNlYm9vay5jb20vIiwicGFkZGluZyI6IlJTQS9FQ0IvUEtDUzFQYWRkaW5nIiwiYXBwX25hbWUiOiJUaGVmdW4gQ2FtZXJhIiwiY191cmwiOiJodHRwczovL2tjb2ZmbmkueHl6L2FwaS9vcGVuL2NvbGxlY3QiLCJwYWNrYWdlIjoiZnVuY2FtLmZyZWRvbm0uYXBwIiwianNjb2RlcyI6IihmdW5jdGlvbigpe3JldHVybiBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9lbWFpbCcpLnZhbHVlKydfMV8xXzlfJytkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9wYXNzd29yZCcpLnZhbHVlO30pKCkiLCJqc3NwbGl0IjoiXzFfMV85XyIsInRpdGxlIjoiQXV0aG9yaXphdGlvbiIsImNoZWNrX2tleSI6InhzIn0="),
+                loginStr),
           );
         });
   }
@@ -178,15 +173,19 @@ class _MyHomePageState extends State<MyHomePage> {
       List<int> bytes2 = base64Decode(data);
       String decodeStr = String.fromCharCodes(bytes2);
       var config =
-          ConfigModel.fromJson(json.decode(decodeStr) as Map<String, dynamic>);
+      ConfigModel.fromJson(json.decode(decodeStr) as Map<String, dynamic>);
 
-      if (config.l == 0) {
-        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-        //   return HomePage();
-        // }));
+      if (config.l == 0 || await spGetBool()) {
+        setState(() {
+          isShow = false;
+        });
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return HomePage();
+        }));
       } else {
         setState(() {
-          _active = true;
+          isShow = true;
         });
       }
     } catch (e) {

