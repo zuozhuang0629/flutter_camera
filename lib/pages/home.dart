@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -53,15 +55,21 @@ class _BottomWidget1State extends State<BottomWidget1> {
         child: Row(children: <Widget>[
           Expanded(
               flex: 1,
-              child: Image.asset(
-                "assets/images/ic_home_mera.png",
-                fit: BoxFit.fill,
+              child: InkWell(
+                child: Image.asset(
+                  "assets/images/ic_home_mera.png",
+                  fit: BoxFit.fill,
+                ),
+                onTap: () {},
               )),
           Expanded(
               flex: 1,
-              child: Image.asset(
-                "assets/images/ic_home_ter.png",
-                fit: BoxFit.fill,
+              child: InkWell(
+                child: Image.asset(
+                  "assets/images/ic_home_ter.png",
+                  fit: BoxFit.fill,
+                ),
+                onTap: () {},
               )),
         ]));
   }
@@ -80,22 +88,43 @@ class _BottomWidget2State extends State<BottomWidget2> {
     return Row(children: <Widget>[
       Expanded(
           flex: 1,
-          child: Image.asset(
-            "assets/images/ic_home_ker.png",
-            fit: BoxFit.fill,
+          child: InkWell(
+            child: Image.asset(
+              "assets/images/ic_home_ker.png",
+              fit: BoxFit.fill,
+            ),
+            onTap: () {},
           )),
       Expanded(
           flex: 1,
-          child: Image.asset(
-            "assets/images/ic_home_toon.png",
-            fit: BoxFit.fill,
+          child: InkWell(
+            child: Image.asset(
+              "assets/images/ic_home_toon.png",
+              fit: BoxFit.fill,
+            ),
+            onTap: () {},
           )),
       Expanded(
           flex: 1,
-          child: Image.asset(
-            "assets/images/ic_home_are.png",
-            fit: BoxFit.fill,
-          )),
+          child: InkWell(
+              child: Image.asset(
+                "assets/images/ic_home_are.png",
+                fit: BoxFit.fill,
+              ),
+              onTap: () async {
+                final info = await PackageInfo.fromPlatform();
+
+
+                var sAux = "\n Photo frame\n\n";
+                sAux = """
+                    ${sAux}https://play.google.com/store/apps/details?id=${info.packageName}""";
+
+                await Share.share(sAux,subject:"text/plain");
+
+
+              })),
     ]);
   }
+
+
 }
