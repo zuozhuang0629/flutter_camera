@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:dio/adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -14,8 +15,17 @@ import 'package:flutter_camera/utils/SharedPreferencesUtils.dart';
 import 'package:flutter_camera/utils/mlog.dart';
 import 'package:flutter_camera/widgets/image_click.dart';
 
+
+List<CameraDescription> cameras = <CameraDescription>[];
+
+Future<void> initCamera() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
+}
+
 void main() {
   HttpOverrides.global = MyHttpOverrides();
+  initCamera();
   runApp(const MyApp());
 }
 

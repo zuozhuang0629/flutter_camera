@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/pages/camera_page.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -60,7 +61,12 @@ class _BottomWidget1State extends State<BottomWidget1> {
                   "assets/images/ic_home_mera.png",
                   fit: BoxFit.fill,
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>   CameraApp()),
+                  );
+                },
               )),
           Expanded(
               flex: 1,
@@ -114,17 +120,12 @@ class _BottomWidget2State extends State<BottomWidget2> {
               onTap: () async {
                 final info = await PackageInfo.fromPlatform();
 
-
                 var sAux = "\n Photo frame\n\n";
                 sAux = """
                     ${sAux}https://play.google.com/store/apps/details?id=${info.packageName}""";
 
-                await Share.share(sAux,subject:"text/plain");
-
-
+                await Share.share(sAux, subject: "text/plain");
               })),
     ]);
   }
-
-
 }
