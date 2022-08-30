@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_camera/pages/camera_page.dart';
+import 'package:flutter_camera/pages/cartoon_page.dart';
+import 'package:flutter_camera/pages/filter_page.dart';
+import 'package:flutter_camera/pages/sticker_page.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -64,7 +67,31 @@ class _BottomWidget1State extends State<BottomWidget1> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>   CameraApp()),
+                    MaterialPageRoute(
+                        builder: (context) => CameraApp((path) async {
+                              Navigator.pop(context);
+                              var index = await changeModel();
+
+
+                              if (index == 1) {
+                                Navigator.push(this.context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return FilterPage();
+                                }));
+                              } else if (index == 2) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return StickerPage();
+                                }));
+                              } else if (index == 3) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return CartoonPage();
+                                }));
+                              }
+
+
+                            })),
                   );
                 },
               )),
@@ -78,6 +105,59 @@ class _BottomWidget1State extends State<BottomWidget1> {
                 onTap: () {},
               )),
         ]));
+  }
+
+  Future<int?> changeModel() async {
+    return await showDialog<int>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Please select'),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  // 返回1
+                  Navigator.pop(context, 1);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6),
+                  child: Text('Filter'),
+                ),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  // 返回2
+                  Navigator.pop(context, 2);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6),
+                  child: Text('Sticker'),
+                ),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  // 返回2
+                  Navigator.pop(context, 3);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6),
+                  child: Text('Cartoon'),
+                ),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  // 返回2
+                  Navigator.pop(context, 4);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6),
+                  child: Text('Cancel'),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }
 

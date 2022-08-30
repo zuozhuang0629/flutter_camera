@@ -21,6 +21,9 @@ List<CameraDescription> cameras = <CameraDescription>[];
 Future<void> initCamera() async {
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
+  if(cameras.length >2){
+    cameras = cameras.sublist(0,2);
+  }
 }
 
 void main() {
