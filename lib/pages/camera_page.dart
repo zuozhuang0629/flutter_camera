@@ -168,6 +168,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
               ],
             ),
           ),
+          SizedBox(width: double.infinity,height: 70,)
         ],
       ),
     );
