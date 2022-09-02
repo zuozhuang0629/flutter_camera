@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
 
+import '../datas/configModel.dart';
+import '../main.dart';
+import '../maxUitls/max_ad_id.dart';
+
 class OutDailog extends StatefulWidget {
-  const OutDailog({Key key}) : super(key: key);
+  OutDailog({Key? key}) : super(key: key);
 
   @override
   _OutDailogState createState() => _OutDailogState();
@@ -11,12 +17,20 @@ class OutDailog extends StatefulWidget {
 class _OutDailogState extends State<OutDailog> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TopWidget(),
-        // MaxAdView(),
-
-    );
+    return ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 280.0),
+        child: Material(
+            color: Colors.white,
+            elevation: 10,
+            type: MaterialType.card,
+            child: Column(children: [
+              TopWidget(),
+              MaxAdView(
+                adUnitId: configModel.maxNative??"",
+                adFormat: AdFormat.mrec,
+              ),
+              BottomButton(),
+            ])));
   }
 }
 
@@ -54,7 +68,25 @@ class _BottomButtonState extends State<BottomButton> {
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 6, 16, 16),
       child: Row(
-        children: [],
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              child: Text("OK"),
+              onPressed: () {
+                exit(0);
+              },
+            ),
+            flex: 1,
+          ),
+          Expanded(
+            child: ElevatedButton(
+              child: Text("CANCEL"),
+              onPressed: () {},
+            ),
+            flex: 1,
+          )
+        ],
       ),
     );
   }

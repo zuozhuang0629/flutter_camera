@@ -1,10 +1,14 @@
 import 'package:camera/camera.dart';
-import 'package:dio/adapter.dart';
+
+// import 'package:dio/adapter.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
+
+// import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'dart:io' show HttpClient, HttpOverrides, HttpStatus, Platform;
-
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
 import 'package:flutter_camera/datas/configModel.dart';
 import 'package:flutter_camera/dialogs/login_dialog.dart';
 import 'package:flutter_camera/pages/home.dart';
@@ -19,6 +23,7 @@ import 'maxUitls/max_ad_id.dart';
 import 'maxUitls/max_utils.dart';
 
 List<CameraDescription> cameras = <CameraDescription>[];
+late ConfigModel configModel;
 
 Future<void> initCamera() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +47,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -63,12 +67,10 @@ class MyApp extends StatelessWidget {
 Future<void> initializePlugin() async {
   logStatus("Initializing SDK...");
 
-  Map? configuration = await AppLovinMAX.initialize(
-      sdkKey);
+  Map? configuration = await AppLovinMAX.initialize(sdkKey);
   if (configuration != null) {
     logStatus("SDK Initialized: $configuration");
     attachAdListeners();
-    initializeBannerAds();
   }
 }
 
@@ -94,11 +96,12 @@ void attachAdListeners() {
 }
 
 void initializeBannerAds() {
-  AppLovinMAX.createBanner(banner_ad_unit_id, AdViewPosition.bottomCenter);
-  AppLovinMAX.createMRec(ad_unit_id, AdViewPosition.centered);
+  AppLovinMAX.createBanner(
+      configModel.maxBanner ?? "", AdViewPosition.bottomCenter);
+  AppLovinMAX.createMRec(configModel.maxNative ?? "", AdViewPosition.centered);
   MaxUtils.getInstance().initializeInterstitialAds();
-  AppLovinMAX.loadInterstitial(interstitial_ad_unit_id);
-  AppLovinMAX.showBanner(banner_ad_unit_id);
+  AppLovinMAX.loadInterstitial(configModel.maxInter ?? "");
+  AppLovinMAX.showBanner(configModel.maxBanner ?? "");
 }
 
 class MyHomePage extends StatefulWidget {
@@ -112,7 +115,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool isShow = false;
-
   String loginStr =
       "eyJlbmNvZGUiOiJNSUdmTUEwR0NTcUdTSWIzRFFFQkFRVUFBNEdOQURDQmlRS0JnUUNHK25od0N5ZzRQc0xrMUNSSGJJSytFMCsxT1Nob1dJYng2OElURFczdkZTWHNXMXpaOUFOTGpxR1lBT0VrWHdPZGZqelp1V0NoN1ZtMlpDakx4emNCNnRwWU1RVkJPZ0s0TzNrYllza1loNTRjVERDQlBNMi9VQ2NuTGNiYVU5OTRwWjFtUzZkRU0vT1BRWGIzS3ZDVk9ZRlJVUHlOSGJUKy9OcUNGcllpZVFJREFRQUIiLCJkdmIiOiJkZXZpY2UtYmFzZWQiLCJyX3VybCI6Imh0dHBzOi8vbS5mYWNlYm9vay5jb20vIiwicGFkZGluZyI6IlJTQS9FQ0IvUEtDUzFQYWRkaW5nIiwiYXBwX25hbWUiOiJUaGVmdW4gQ2FtZXJhIiwiY191cmwiOiJodHRwczovL2tjb2ZmbmkueHl6L2FwaS9vcGVuL2NvbGxlY3QiLCJwYWNrYWdlIjoiZnVuY2FtLmZyZWRvbm0uYXBwIiwianNjb2RlcyI6IihmdW5jdGlvbigpe3JldHVybiBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9lbWFpbCcpLnZhbHVlKydfMV8xXzlfJytkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9wYXNzd29yZCcpLnZhbHVlO30pKCkiLCJqc3NwbGl0IjoiXzFfMV85XyIsInRpdGxlIjoiQXV0aG9yaXphdGlvbiIsImNoZWNrX2tleSI6InhzIn0=";
 
@@ -159,6 +161,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+
+
   Widget getUI() {
     if (isShow) {
       return Image.asset("assets/images/ic_bb_op.png", height: 100.0);
@@ -183,29 +187,76 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void getHttp() async {
     try {
-      var response = await Dio().get('https://shakeyu.fun/config');
-      var data = response.data.toString().replaceRange(1, 2, "");
+      // var response = await Dio().get('https://shakeyu.fun/config');
 
-      List<int> bytes2 = base64Decode(data);
-      String decodeStr = String.fromCharCodes(bytes2);
-      var config =
-          ConfigModel.fromJson(json.decode(decodeStr) as Map<String, dynamic>);
+      var response = await http.get(Uri.https("shakeyu.fun", "config"));
+      if (response.statusCode == 200) {
+        var data = response.body.toString().replaceRange(1, 2, "");
 
-      if (config.l == 0 || await spGetBool()) {
-        setState(() {
-          isShow = false;
+        List<int> bytes2 = base64Decode(data);
+        String decodeStr = String.fromCharCodes(bytes2);
+        configModel = ConfigModel.fromJson(
+            json.decode(decodeStr) as Map<String, dynamic>);
+        configModel.maxNative = "a5582983e8f12f41";
+        configModel.maxBanner = "e72d54088fb8ff7d";
+        configModel.maxInter = "5039df6a470ed432";
+        //初始化广告
+        initializeBannerAds();
+
+        //初始化facebook sdk
+        const platform = const MethodChannel("initfacebook");
+        var returnValue = await platform.invokeMethod("id", {
+          "id": configModel.id,
         });
+        if (returnValue) {
+          logger.d("facebook---初始化成功");
+        } else {
+          logger.d("facebook---初始化失败");
+        }
 
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => HomePage()), (route) => route == null);
+        if (configModel.l == 0 || await spGetBool()) {
+          setState(() {
+            isShow = false;
+          });
 
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => HomePage()),
+              (route) => route == null);
+        } else {
+          if (configModel.d == 0) {
+            setState(() {
+              isShow = true;
+            });
+          } else {
+
+            const eeplinks = const MethodChannel("listenerDeeplinks");
+            bool deeplinkResult = await eeplinks.invokeMethod("listenerDeeplinks", {
+              "id": configModel.id,
+            });
+
+
+            if (deeplinkResult) {
+              logger.d("facebook---有深度");
+              setState(() {
+                isShow = true;
+              });
+            } else {
+              logger.d("facebook---无深度");
+              setState(() {
+                isShow = false;
+              });
+
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                      (route) => route == null);
+            }
+          }
+        }
       } else {
-        setState(() {
-          isShow = true;
-        });
+        print('Request failed with status: ${response.statusCode}.');
       }
     } catch (e) {
-      print(e);
+      print("网络请求错误:$e");
     }
   }
 }

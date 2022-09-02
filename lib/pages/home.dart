@@ -1,5 +1,6 @@
 import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/dialogs/out_dailog.dart';
 import 'package:flutter_camera/pages/camera_page.dart';
 import 'package:flutter_camera/pages/cartoon_page.dart';
 import 'package:flutter_camera/pages/filter_page.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_camera/pages/sticker_page.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../datas/configModel.dart';
 import '../main.dart';
 import '../maxUitls/max_ad_id.dart';
 import '../utils/mlog.dart';
@@ -28,8 +30,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              insetPadding: EdgeInsets.zero,
+              child: OutDailog(),
+            );
+          },
+        );
 
-        return true;
+            return true;
       },
       child:  Scaffold(
         body: ConstrainedBox(
@@ -54,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                   child: Padding(padding:EdgeInsets.fromLTRB(0, 10, 0, 10),child:
                   MaxAdView(
-                      adUnitId: ad_unit_id,
+                      adUnitId: configModel.maxNative??"",
                       adFormat: AdFormat.mrec,
 
                       listener: AdViewAdListener(onAdLoadedCallback: (ad) {

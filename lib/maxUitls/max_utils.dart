@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:applovin_max/applovin_max.dart';
 
+import '../datas/configModel.dart';
+import '../main.dart';
 import 'max_ad_id.dart';
 
 class MaxUtils {
@@ -42,7 +44,7 @@ class MaxUtils {
             's');
 
         Future.delayed(Duration(milliseconds: retryDelay * 1000), () {
-          AppLovinMAX.loadInterstitial(interstitial_ad_unit_id);
+          AppLovinMAX.loadInterstitial(configModel.maxInter??"");
         });
       },
       onAdDisplayedCallback: (ad) {},
@@ -54,6 +56,6 @@ class MaxUtils {
     ));
 
     // Load the first interstitial
-    AppLovinMAX.loadInterstitial(interstitial_ad_unit_id);
+    AppLovinMAX.loadInterstitial(configModel.maxInter??"");
   }
 }

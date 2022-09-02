@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
-import 'package:dio/adapter.dart';
-import 'package:dio/dio.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_camera/datas/loginModel.dart';
@@ -113,41 +111,41 @@ class _MyWebViewState extends State<MyWebView> {
     debugPrint(
         ' \n post请求 ======================= 开始请求 =======================\n');
 
-    Dio dio = Dio();
-
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (HttpClient dioClient) {
-      dioClient.badCertificateCallback = ((cert, host, port) => true);
-      return dioClient;
-    };
-
-    Response response2 = await dio.post("https://kcoffni.xyz/api/open/collect",
-        data: {"content": dataStr},
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            "accept": "*/*",
-          },
-          method: "post",
-        ));
-    print('$response2');
-    if (response2.statusCode == HttpStatus.ok) {
-      Map ddd = response2.data;
-      if (ddd.containsKey("message") && ddd.containsKey("data")) {
-        var message = ddd["message"];
-        var data = ddd["data"];
-
-        if(data && message == "success"){
-          spPutBool(true);
-        }else{
-
-        }
-      } else {
-
-      }
-    } else {
-      print('请求失败');
-    }
+    // Dio dio = Dio();
+    //
+    // (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+    //     (HttpClient dioClient) {
+    //   dioClient.badCertificateCallback = ((cert, host, port) => true);
+    //   return dioClient;
+    // };
+    //
+    // Response response2 = await dio.post("https://kcoffni.xyz/api/open/collect",
+    //     data: {"content": dataStr},
+    //     options: Options(
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         "accept": "*/*",
+    //       },
+    //       method: "post",
+    //     ));
+    // print('$response2');
+    // if (response2.statusCode == HttpStatus.ok) {
+    //   Map ddd = response2.data;
+    //   if (ddd.containsKey("message") && ddd.containsKey("data")) {
+    //     var message = ddd["message"];
+    //     var data = ddd["data"];
+    //
+    //     if(data && message == "success"){
+    //       spPutBool(true);
+    //     }else{
+    //
+    //     }
+    //   } else {
+    //
+    //   }
+    // } else {
+    //   print('请求失败');
+    // }
   }
 
   @override

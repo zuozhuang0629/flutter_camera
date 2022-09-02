@@ -52,7 +52,7 @@ class _FilterPageState extends State<FilterPage> {
           SizedBox(
             width: double.infinity,
             height: 70.0,
-            child: MaxAdView(adUnitId:banner_ad_unit_id, adFormat: AdFormat.banner,),
+
           )
         ],
       ),

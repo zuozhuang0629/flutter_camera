@@ -4,12 +4,15 @@
 
 import 'dart:convert';
 
+
+
 ConfigModel configModelFromJson(String str) =>
     ConfigModel.fromJson(json.decode(str));
 
 String configModelToJson(ConfigModel data) => json.encode(data.toJson());
 
 class ConfigModel {
+
   ConfigModel({
     this.adsUrl,
     this.aggregationPlatform,
