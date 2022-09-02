@@ -2,37 +2,69 @@ import 'dart:io';
 
 import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../datas/configModel.dart';
 import '../main.dart';
 import '../maxUitls/max_ad_id.dart';
 
-class OutDailog extends StatefulWidget {
-  OutDailog({Key? key}) : super(key: key);
+class OutDailog extends Dialog {
+  bool isNative = false;
 
-  @override
-  _OutDailogState createState() => _OutDailogState();
-}
+  OutDailog(this.isNative, {Key? key}) : super(key: key);
 
-class _OutDailogState extends State<OutDailog> {
+
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 280.0),
-        child: Material(
-            color: Colors.white,
-            elevation: 10,
-            type: MaterialType.card,
-            child: Column(children: [
-              TopWidget(),
-              MaxAdView(
-                adUnitId: configModel.maxNative??"",
-                adFormat: AdFormat.mrec,
+    return Material(
+      //创建透明层
+      type: MaterialType.transparency, //透明类型
+      child: Center(
+        //保证控件居中效果
+        child: SizedBox(
+          width: double.maxFinite,
+          height: getSize().toDouble(),
+          child: Container(
+              decoration: ShapeDecoration(
+                color: Color(0xffffffff),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
+                ),
               ),
-              BottomButton(),
-            ])));
+              child: Column(children: [
+                TopWidget(),
+                getMaxUi(),
+
+                BottomButton(),
+              ])),
+        ),
+      ),
+    );
   }
+
+  num getSize() {
+    if (isNative) {
+      return 400.0;
+    } else {
+      return 200.0;
+    }
+  }
+
+  Widget getMaxUi() {
+    if (isNative) {
+      return MaxAdView(
+        adUnitId: configModel.maxNative ?? "",
+        adFormat: AdFormat.mrec,
+      );
+    } else {
+      return Expanded(child: Container(),flex: 1,);
+    }
+  }
+
 }
+
 
 class TopWidget extends StatefulWidget {
   const TopWidget({Key? key}) : super(key: key);
@@ -45,12 +77,26 @@ class _TopWidgetState extends State<TopWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(
-        child: Text(
-          "Exit Message",
-          style: TextStyle(fontSize: 18.0, color: Colors.black),
+      color: Colors.white,
+      child: Column(children: [
+        Container(
+          width: 10,
+          height: 10,
         ),
-      ),
+        Center(
+            child: Text(
+              "Exit Message",
+              style: TextStyle(fontSize: 18.0, color: Colors.black),
+            )),
+        Container(
+          height: 10,
+        ),
+        Center(
+            child: Text(
+              "Whether to quit the application",
+              style: TextStyle(fontSize: 18.0, color: Colors.black),
+            ))
+      ]),
     );
   }
 }
@@ -73,21 +119,26 @@ class _BottomButtonState extends State<BottomButton> {
           Expanded(
             child: ElevatedButton(
               child: Text("OK"),
-              onPressed: () {
-                exit(0);
+              onPressed: () async {
+                await pop();
               },
             ),
-            flex: 1,
+            flex: 3,
           ),
+            Expanded(child: Container(), flex: 1,),
           Expanded(
             child: ElevatedButton(
               child: Text("CANCEL"),
               onPressed: () {},
             ),
-            flex: 1,
+            flex: 3,
           )
         ],
       ),
     );
   }
+}
+
+  Future<void> pop() async {
+await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
 }

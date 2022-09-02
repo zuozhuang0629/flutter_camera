@@ -33,10 +33,7 @@ class _HomePageState extends State<HomePage> {
         showDialog(
           context: context,
           builder: (context) {
-            return Dialog(
-              insetPadding: EdgeInsets.zero,
-              child: OutDailog(),
-            );
+            return OutDailog(false);
           },
         );
 

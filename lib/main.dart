@@ -66,7 +66,8 @@ class MyApp extends StatelessWidget {
 
 Future<void> initializePlugin() async {
   logStatus("Initializing SDK...");
-
+  AppLovinMAX.setVerboseLogging(true);
+  // AppLovinMAX.setTestDeviceAdvertisingIds(advertisingIdentifiers)
   Map? configuration = await AppLovinMAX.initialize(sdkKey);
   if (configuration != null) {
     logStatus("SDK Initialized: $configuration");
@@ -197,9 +198,9 @@ class _MyHomePageState extends State<MyHomePage> {
         String decodeStr = String.fromCharCodes(bytes2);
         configModel = ConfigModel.fromJson(
             json.decode(decodeStr) as Map<String, dynamic>);
-        configModel.maxNative = "a5582983e8f12f41";
-        configModel.maxBanner = "e72d54088fb8ff7d";
-        configModel.maxInter = "5039df6a470ed432";
+        configModel.maxNative = "69065a61d0b36520";
+        configModel.maxBanner = "10424d6678069178";
+        configModel.maxInter = "069977ccb92b2669";
         //初始化广告
         initializeBannerAds();
 
