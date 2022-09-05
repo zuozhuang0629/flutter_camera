@@ -1,6 +1,7 @@
 import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_camera/dialogs/out_dailog.dart';
+import 'package:flutter_camera/maxUitls/max_utils.dart';
 import 'package:flutter_camera/pages/camera_page.dart';
 import 'package:flutter_camera/pages/cartoon_page.dart';
 import 'package:flutter_camera/pages/filter_page.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_camera/pages/sticker_page.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../datas/configModel.dart';
 import '../main.dart';
 import '../maxUitls/max_ad_id.dart';
 import '../utils/mlog.dart';
@@ -29,74 +29,70 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return OutDailog(false);
-          },
-        );
+        onWillPop: () async {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return OutDailog(false);
+            },
+          );
 
-            return true;
-      },
-      child:  Scaffold(
-        body: ConstrainedBox(
-          constraints: const BoxConstraints.expand(),
-          child: Stack(alignment: Alignment.center, children: <Widget>[
-            SizedBox(
-              width: double.maxFinite,
-              height: double.maxFinite,
-              child: Image.asset(
-                "assets/images/bg_xuxing.png",
-                fit: BoxFit.fill,
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                Image.asset(
-                  "assets/images/ic_home_bg.png",
+          return true;
+        },
+        child: Scaffold(
+          body: ConstrainedBox(
+            constraints: const BoxConstraints.expand(),
+            child: Stack(alignment: Alignment.center, children: <Widget>[
+              SizedBox(
+                width: double.maxFinite,
+                height: double.maxFinite,
+                child: Image.asset(
+                  "assets/images/bg_xuxing.png",
                   fit: BoxFit.fill,
                 ),
-                BottomWidget1(),
-                BottomWidget2(),
-                Expanded(
-                  child: Padding(padding:EdgeInsets.fromLTRB(0, 10, 0, 10),child:
-                  MaxAdView(
-                      adUnitId: configModel.maxNative??"",
-                      adFormat: AdFormat.mrec,
-
-                      listener: AdViewAdListener(onAdLoadedCallback: (ad) {
-                        logStatus('MREC widget ad loaded from ' + ad.networkName);
-                      }, onAdLoadFailedCallback: (adUnitId, error) {
-                        logStatus(
-                            'MREC widget ad failed to load with error code ' +
-                                error.code.toString() +
-                                ' and message: ' +
-                                error.message);
-                      }, onAdClickedCallback: (ad) {
-                        logStatus('MREC widget ad clicked');
-                      }, onAdExpandedCallback: (ad) {
-                        logStatus('MREC widget ad expanded');
-                      }, onAdCollapsedCallback: (ad) {
-                        logStatus('MREC widget ad collapsed');
-                      })),
-
-                  )  , flex: 1,),
-                SizedBox(
-                  height: 70,
-                  child: Container(),
-                )
-
-              ],
-            ),
-          ]),
-        ),
-      )
-    );
-
-
-
-
+              ),
+              Column(
+                children: <Widget>[
+                  Image.asset(
+                    "assets/images/ic_home_bg.png",
+                    fit: BoxFit.fill,
+                  ),
+                  BottomWidget1(),
+                  BottomWidget2(),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      child: MaxAdView(
+                          adUnitId: configModel.maxNative ?? "",
+                          adFormat: AdFormat.mrec,
+                          listener: AdViewAdListener(onAdLoadedCallback: (ad) {
+                            logStatus(
+                                'MREC widget ad loaded from ' + ad.networkName);
+                          }, onAdLoadFailedCallback: (adUnitId, error) {
+                            logStatus(
+                                'MREC widget ad failed to load with error code ' +
+                                    error.code.toString() +
+                                    ' and message: ' +
+                                    error.message);
+                          }, onAdClickedCallback: (ad) {
+                            logStatus('MREC widget ad clicked');
+                          }, onAdExpandedCallback: (ad) {
+                            logStatus('MREC widget ad expanded');
+                          }, onAdCollapsedCallback: (ad) {
+                            logStatus('MREC widget ad collapsed');
+                          })),
+                    ),
+                    flex: 1,
+                  ),
+                  SizedBox(
+                    height: 70,
+                    child: Container(),
+                  )
+                ],
+              ),
+            ]),
+          ),
+        ));
   }
 }
 
@@ -124,35 +120,40 @@ class _BottomWidget1State extends State<BottomWidget1> {
                   fit: BoxFit.fill,
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CameraApp((path) async {
-                              selPath = path;
-                              Navigator.pop(context);
-                              var index = await changeModel();
+                  MaxUtils.getInstance().showInter((isShowCall) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CameraApp((path) async {
+                                selPath = path;
+                                Navigator.pop(context);
+                                var index = await changeModel();
 
-                              if (index == 1) {
-                                Navigator.push(this.context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return FilterPage();
-                                }));
-                              } else if (index == 2) {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return StickerPage();
-                                }));
-                              } else if (index == 3) {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return CartoonPage();
-                                }));
-                              }
-                            })),
-                  );
+                                if (index == 1) {
+                                  Navigator.push(this.context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return FilterPage();
+                                  }));
+                                } else if (index == 2) {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return StickerPage();
+                                  }));
+                                } else if (index == 3) {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return CartoonPage();
+                                  }));
+                                }
+                              })),
+                    );
+                  }, placement: "");
                 },
               )),
-          SizedBox(width: 10,child: Container(),),
+          SizedBox(
+            width: 10,
+            child: Container(),
+          ),
           Expanded(
               flex: 1,
               child: InkWell(
@@ -160,7 +161,11 @@ class _BottomWidget1State extends State<BottomWidget1> {
                   "assets/images/ic_home_ter.png",
                   fit: BoxFit.fill,
                 ),
-                onTap: () {},
+                onTap: () {
+                  MaxUtils.getInstance().showInter((isShowCall) {
+
+                  });
+                },
               )),
         ]));
   }
@@ -230,43 +235,51 @@ class BottomWidget2 extends StatefulWidget {
 class _BottomWidget2State extends State<BottomWidget2> {
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: EdgeInsets.fromLTRB(16, 0, 16, 0),child: Row(children: <Widget>[
-      Expanded(
-          flex: 1,
-          child: InkWell(
-            child: Image.asset(
-              "assets/images/ic_home_ker.png",
-              fit: BoxFit.fill,
-            ),
-            onTap: () {},
-          )),
-      SizedBox(width: 10,child: Container(),),
-      Expanded(
-          flex: 1,
-          child: InkWell(
-            child: Image.asset(
-              "assets/images/ic_home_toon.png",
-              fit: BoxFit.fill,
-            ),
-            onTap: () {},
-          )),
-      SizedBox(width: 10,child: Container(),),
-      Expanded(
-          flex: 1,
-          child: InkWell(
-              child: Image.asset(
-                "assets/images/ic_home_are.png",
-                fit: BoxFit.fill,
-              ),
-              onTap: () async {
-                final info = await PackageInfo.fromPlatform();
+    return Padding(
+        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(children: <Widget>[
+          Expanded(
+              flex: 1,
+              child: InkWell(
+                child: Image.asset(
+                  "assets/images/ic_home_ker.png",
+                  fit: BoxFit.fill,
+                ),
+                onTap: () {},
+              )),
+          SizedBox(
+            width: 10,
+            child: Container(),
+          ),
+          Expanded(
+              flex: 1,
+              child: InkWell(
+                child: Image.asset(
+                  "assets/images/ic_home_toon.png",
+                  fit: BoxFit.fill,
+                ),
+                onTap: () {},
+              )),
+          SizedBox(
+            width: 10,
+            child: Container(),
+          ),
+          Expanded(
+              flex: 1,
+              child: InkWell(
+                  child: Image.asset(
+                    "assets/images/ic_home_are.png",
+                    fit: BoxFit.fill,
+                  ),
+                  onTap: () async {
+                    final info = await PackageInfo.fromPlatform();
 
-                var sAux = "\n Photo frame\n\n";
-                sAux = """
+                    var sAux = "\n Photo frame\n\n";
+                    sAux = """
                     ${sAux}https://play.google.com/store/apps/details?id=${info.packageName}""";
 
-                await Share.share(sAux, subject: "text/plain");
-              })),
-    ]));
+                    await Share.share(sAux, subject: "text/plain");
+                  })),
+        ]));
   }
 }

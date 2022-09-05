@@ -2,12 +2,14 @@ import 'dart:math';
 
 import 'package:applovin_max/applovin_max.dart';
 
-import '../datas/configModel.dart';
 import '../main.dart';
 import 'max_ad_id.dart';
 
+typedef IsShowCall = void Function(bool isShowCall);
+
 class MaxUtils {
   static MaxUtils? _instance;
+  IsShowCall? _showCall = null;
 
   // 私有的命名构造函数
   MaxUtils._internal();
@@ -18,6 +20,45 @@ class MaxUtils {
     return _instance!;
   }
 
+  static int allCount = 0;
+
+  Future<void> showInter(IsShowCall isShowCall, {placement}) async {
+    bool isReady =
+        (await AppLovinMAX.isInterstitialReady(configModel.maxInter!))!;
+
+    if (!isReady) {
+      AppLovinMAX.loadInterstitial(configModel.maxInter!);
+      isShowCall(false);
+      return;
+    }
+
+    var cuuro = allCount % configModel.xy1!;
+    if (cuuro < configModel.xy2!) {
+      _showCall = isShowCall;
+      AppLovinMAX.showInterstitial(configModel.maxInter!, placement: placement);
+    } else {
+      isShowCall(false);
+    }
+  }
+
+  Future<void> showInter2(IsShowCall isShowCall, {placement}) async {
+    bool isReady =
+        (await AppLovinMAX.isInterstitialReady(configModel.maxInter!))!;
+
+    if (!isReady) {
+      AppLovinMAX.loadInterstitial(configModel.maxInter!);
+      isShowCall(false);
+      return;
+    }
+
+    var cuuro = allCount % configModel.xy1!;
+    if (cuuro < configModel.xy2!) {
+      _showCall = isShowCall;
+      AppLovinMAX.showInterstitial(configModel.maxInter!, placement: placement);
+    } else {
+      isShowCall(false);
+    }
+  }
 
   var _interstitialRetryAttempt = 0;
   var _lastShowTime = 0;
@@ -27,12 +68,9 @@ class MaxUtils {
       onAdLoadedCallback: (ad) {
         print('Interstitial ad loaded from ' + ad.networkName);
 
-        // Reset retry attempt
         _interstitialRetryAttempt = 0;
       },
       onAdLoadFailedCallback: (adUnitId, error) {
-        // Interstitial ad failed to load
-        // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
         _interstitialRetryAttempt = _interstitialRetryAttempt + 1;
 
         int retryDelay = pow(2, min(6, _interstitialRetryAttempt)).toInt();
@@ -44,18 +82,25 @@ class MaxUtils {
             's');
 
         Future.delayed(Duration(milliseconds: retryDelay * 1000), () {
-          AppLovinMAX.loadInterstitial(configModel.maxInter??"");
+          AppLovinMAX.loadInterstitial(configModel.maxInter ?? "");
         });
       },
       onAdDisplayedCallback: (ad) {},
-      onAdDisplayFailedCallback: (ad, error) {},
+      onAdDisplayFailedCallback: (ad, error) {
+        if (_showCall != null) {
+          _showCall!(false);
+        }
+      },
       onAdClickedCallback: (ad) {},
       onAdHiddenCallback: (ad) {
         _lastShowTime = DateTime.now().millisecondsSinceEpoch;
+        if (_showCall != null) {
+          _showCall!(true);
+        }
       },
     ));
 
     // Load the first interstitial
-    AppLovinMAX.loadInterstitial(configModel.maxInter??"");
+    AppLovinMAX.loadInterstitial(configModel.maxInter ?? "");
   }
 }

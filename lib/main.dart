@@ -9,7 +9,6 @@ import 'dart:convert';
 import 'dart:io' show HttpClient, HttpOverrides, HttpStatus, Platform;
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:flutter_camera/datas/configModel.dart';
 import 'package:flutter_camera/dialogs/login_dialog.dart';
 import 'package:flutter_camera/pages/home.dart';
 import 'package:applovin_max/applovin_max.dart';
@@ -19,6 +18,7 @@ import 'package:flutter_camera/utils/SharedPreferencesUtils.dart';
 import 'package:flutter_camera/utils/mlog.dart';
 import 'package:flutter_camera/widgets/image_click.dart';
 
+import 'datas/config_model.dart';
 import 'maxUitls/max_ad_id.dart';
 import 'maxUitls/max_utils.dart';
 

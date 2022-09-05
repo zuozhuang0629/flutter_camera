@@ -3,7 +3,7 @@
 
    <application
         android:windowSoftInputMode="adjustResize"
-        android:label="Agate Camera Editor"
+        android:label="Colguy Cam Proxy"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_xushan">
         <activity

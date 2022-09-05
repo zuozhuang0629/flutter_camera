@@ -4,7 +4,6 @@ import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../datas/configModel.dart';
 import '../main.dart';
 import '../maxUitls/max_ad_id.dart';
 
@@ -12,7 +11,6 @@ class OutDailog extends Dialog {
   bool isNative = false;
 
   OutDailog(this.isNative, {Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +127,9 @@ class _BottomButtonState extends State<BottomButton> {
           Expanded(
             child: ElevatedButton(
               child: Text("CANCEL"),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
             flex: 3,
           )

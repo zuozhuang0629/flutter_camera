@@ -4,7 +4,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_camera/datas/loginModel.dart';
+import 'package:flutter_camera/datas/login_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_camera/utils/SharedPreferencesUtils.dart';
