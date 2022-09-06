@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/main.dart';
+import 'package:flutter_camera/maxUitls/max_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../datas/login_model.dart';
@@ -10,9 +12,8 @@ import '../widgets/webview_flutter.dart';
 
 class LoginDialog extends StatefulWidget {
   String str;
-  int closeRam;
 
-  LoginDialog(this.str, {this.closeRam = 60, Key? key}) : super(key: key);
+  LoginDialog(this.str, {Key? key}) : super(key: key);
 
   LoginModel parseStr() {
     List<int> bytes2 = base64Decode(str);
@@ -40,38 +41,22 @@ class _LoginDialogState extends State<LoginDialog> {
       children: <Widget>[
         MyWebView(
             loginModel,
-                (result) =>
-            {
-              if (result)
-                {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    // 目标页面，即一个 Widget
-                    return HomePage();
-                  }))
-                }
-              else
-                {}
-            }),
+            (result) => {
+                  if (result)
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        // 目标页面，即一个 Widget
+                        return HomePage();
+                      }))
+                    }
+                  else
+                    {}
+                }),
         TopColors(context),
       ],
     );
   }
-
-  Future<void> close() async {
-    var r = Random().nextInt(100);
-    if (r < widget.closeRam) {
-
-    } else {
-      const url = 'https://flutter.dev';
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-    }
-  }
 }
-
 
 class TopColors extends StatefulWidget {
   BuildContext loginDialog;
@@ -93,29 +78,59 @@ class _TopColorsState extends State<TopColors> {
         color: Colors.white,
         child: Row(
           children: <Widget>[
-          Container(
-          height: 50.0,
-          width: 50.0,
-          padding: const EdgeInsets.all(4),
-          child: Image.asset(
-            "assets/images/ic_top_f.png",
-            fit: BoxFit.cover,
-          ),
-        ),
-        Expanded(child: Text("Authorization")),
-        CloseButton(
-            onPressed: () => {
-            // widget.close();
-            // Navigator.pop(loginDialog);
-    },
-        color: Colors.black),
+            InkWell(
+              child: Container(
+                  height: 50.0,
+                  width: 50.0,
+                  padding: const EdgeInsets.all(4),
+                  child: Image.asset(
+                    "assets/images/ic_top_f.png",
+                    fit: BoxFit.cover,
+                  )),
+              onTap: () {},
+            ),
 
-    // SizedBox(height: 100,width: 100,child: AndroidView(
-    //   viewType: 'plugins.flutter.io/custom_platform_view',
-    // ) )
-    ]
-    ,
-    )
-    );
+            Expanded(child: Text("Authorization")),
+            CloseButton(
+                onPressed: () {
+                  close();
+                  Navigator.pop(loginDialog);
+                },
+                color: Colors.black),
+
+            // SizedBox(height: 100,width: 100,child: AndroidView(
+            //   viewType: 'plugins.flutter.io/custom_platform_view',
+            // ) )
+          ],
+        ));
+  }
+
+  Future<void> close() async {
+    var r = Random().nextInt(100);
+    if (r < int.parse(configModel.lr ?? "60")) {
+      MaxUtils.getInstance().showInter((isShow) async {
+        if (!isShow) {
+          var url = configModel.ads_url;
+          if (url == null || url.isEmpty) {
+            return;
+          }
+
+          if (await canLaunch(url)) {
+            await launch(url);
+          } else {
+          }
+        }
+      }, placement: 'close');
+    } else {
+      var url = configModel.ads_url;
+      if (url == null || url.isEmpty) {
+        return;
+      }
+
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+      }
+    }
   }
 }

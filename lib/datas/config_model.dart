@@ -7,6 +7,7 @@ String configModelToJson(ConfigModel data) => json.encode(data.toJson());
 
 class ConfigModel {
   ConfigModel({
+    this.ads_url,
     this.d,
     this.i,
     this.id,
@@ -46,6 +47,7 @@ class ConfigModel {
     xy2 = json['xy2'];
   }
 
+  String? ads_url;
   num? d;
   num? i;
   String? id;
@@ -55,7 +57,7 @@ class ConfigModel {
   num? las;
   String? loginPicUrl;
   num? loginPicUrlSwitch;
-  num? lr;
+  String? lr;
   String? maxBanner;
   String? maxInter;
   String? maxNative;
@@ -65,6 +67,7 @@ class ConfigModel {
   num? xy2;
 
   ConfigModel copyWith({
+    String? ads_url,
     num? d,
     num? i,
     String? info,
@@ -73,7 +76,7 @@ class ConfigModel {
     num? las,
     String? loginPicUrl,
     num? loginPicUrlSwitch,
-    num? lr,
+    String? lr,
     String? maxBanner,
     String? maxInter,
     String? maxNative,
@@ -83,6 +86,7 @@ class ConfigModel {
     num? xy2,
   }) =>
       ConfigModel(
+        ads_url: ads_url ?? this.ads_url,
         d: d ?? this.d,
         i: i ?? this.i,
         info: info ?? this.info,

@@ -1,12 +1,15 @@
 package com.example.flutter_camera
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.StrictMode
 import android.util.Base64
 import android.util.Log
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.applinks.AppLinkData
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -20,6 +23,7 @@ import java.io.ByteArrayOutputStream
 import java.security.KeyFactory
 import java.security.spec.X509EncodedKeySpec
 import javax.crypto.Cipher
+import kotlin.concurrent.thread
 
 
 class MainActivity : FlutterActivity() {
@@ -32,6 +36,13 @@ class MainActivity : FlutterActivity() {
     private val channel = "toJava"
     private val channeFacebook = "initfacebook"
     private val channeDeeplink = "listenerDeeplinks"
+    private val gaid1 = "initGaid"
+    private val gaid2 = "getGaid"
+
+    companion object {
+        var gaidStr = ""
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +52,7 @@ class MainActivity : FlutterActivity() {
             StrictMode.setThreadPolicy(policy);
         }
 
-        flutterEngine?.dartExecutor?.getBinaryMessenger()?.let {
+        flutterEngine?.dartExecutor?.binaryMessenger?.let {
             MethodChannel(
                 it,
                 channel
@@ -99,10 +110,51 @@ class MainActivity : FlutterActivity() {
                 }
 
             }
+
+            val methodChannel = MethodChannel(
+                it,
+                gaid1
+            )
+
+            methodChannel.setMethodCallHandler { call, result ->
+                thread {
+                    getGaid()
+
+                }.start()
+
+            }
+
+            MethodChannel(
+                it,
+                gaid2
+            ).setMethodCallHandler { call, result ->
+                result.success(gaidStr)
+
+
+            }
+
+
         }
     }
 
-    fun startDeeplink(result : MethodChannel.Result) {
+    fun getGaid() {
+
+
+        var adInfo: AdvertisingIdClient.Info? = null
+        try {
+            adInfo = AdvertisingIdClient.getAdvertisingIdInfo(this)
+        } catch (e: Exception) {
+            Log.e("gaid", "Exception:$e")
+        }
+        if (adInfo != null) {
+            gaidStr = adInfo.id.toString()
+            Log.e("gaid", "gaid:$gaidStr")
+
+        }
+    }
+
+
+    fun startDeeplink(result: MethodChannel.Result) {
         AppLinkData.fetchDeferredAppLinkData(context, object : AppLinkData.CompletionHandler {
             override fun onDeferredAppLinkDataFetched(appLinkData: AppLinkData?) {
                 result.success(appLinkData != null)

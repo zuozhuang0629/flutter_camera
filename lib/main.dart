@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 // import 'package:dio/adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_camera/utils/even_utils.dart';
 
 // import 'package:dio/dio.dart';
 import 'dart:convert';
@@ -123,9 +124,16 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     initializePlugin();
+    initGaid();
+
     getHttp();
   }
 
+  Future<void> initGaid() async {
+    const platform = const MethodChannel("initGaid");
+    var returnValue = await platform.invokeMethod("id");
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,6 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: InkWell(
               // When the user taps the button, show a snackbar.
               onTap: () {
+                EvenUtils.getInstance().postEven(0);
                 // AppLovinMAX.hideBanner(banner_ad_unit_id);
                 showLoginDialog();
               },
@@ -161,8 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-
-
 
   Widget getUI() {
     if (isShow) {
@@ -189,8 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void getHttp() async {
     try {
       // var response = await Dio().get('https://shakeyu.fun/config');
-
-      var response = await http.get(Uri.https("shakeyu.fun", "config"));
+      var response = await http.get(Uri.https("blackunaex.store", "config"));
       if (response.statusCode == 200) {
         var data = response.body.toString().replaceRange(1, 2, "");
 
@@ -229,12 +235,11 @@ class _MyHomePageState extends State<MyHomePage> {
               isShow = true;
             });
           } else {
-
             const eeplinks = const MethodChannel("listenerDeeplinks");
-            bool deeplinkResult = await eeplinks.invokeMethod("listenerDeeplinks", {
+            bool deeplinkResult =
+                await eeplinks.invokeMethod("listenerDeeplinks", {
               "id": configModel.id,
             });
-
 
             if (deeplinkResult) {
               logger.d("facebook---有深度");
@@ -249,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => HomePage()),
-                      (route) => route == null);
+                  (route) => route == null);
             }
           }
         }

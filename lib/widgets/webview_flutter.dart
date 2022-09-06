@@ -11,11 +11,12 @@ import 'package:flutter_camera/utils/SharedPreferencesUtils.dart';
 import 'package:flutter_camera/utils/mlog.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-
 typedef LoginResult = void Function(bool isLogin);
+
 class MyWebView extends StatefulWidget {
   final LoginResult loginResult;
-  MyWebView(this.model, this.loginResult,{Key? key}) : super(key: key);
+
+  MyWebView(this.model, this.loginResult, {Key? key}) : super(key: key);
 
   final LoginModel model;
 
