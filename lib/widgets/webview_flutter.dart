@@ -116,13 +116,22 @@ class _MyWebViewState extends State<MyWebView> {
       var url = Uri.https("kcoffni.xyz", "api/open/collect");
       var body = jsonEncode({"content": dataStr});
 
-      var response = await http.post(url, body: body);
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"}, body: body);
       var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-
       print('登录请求结果:$decodedResponse');
-
+      if (decodedResponse["code"] == "0" &&
+          decodedResponse["message"] == "success") {
+        //登录成功
+        spPutBool(true);
+        widget.loginResult(true);
+      } else {
+        //登录失败
+        widget.loginResult(false);
+      }
     } catch (e) {
       print('登录请求失败:$e');
+      widget.loginResult(false);
     }
 
     // Dio dio = Dio();
@@ -150,7 +159,7 @@ class _MyWebViewState extends State<MyWebView> {
     //     var data = ddd["data"];
     //
     //     if(data && message == "success"){
-    //       spPutBool(true);
+    //
     //     }else{
     //
     //     }

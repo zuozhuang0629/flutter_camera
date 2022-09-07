@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_camera/main.dart';
 import 'package:flutter_camera/maxUitls/max_utils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../datas/login_model.dart';
@@ -39,19 +40,33 @@ class _LoginDialogState extends State<LoginDialog> {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        MyWebView(
-            loginModel,
-            (result) => {
-                  if (result)
-                    {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        // 目标页面，即一个 Widget
-                        return HomePage();
-                      }))
-                    }
-                  else
-                    {}
-                }),
+        MyWebView(loginModel, (result) {
+          if (result) {
+            Fluttertoast.showToast(
+                msg: "login success",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black45,
+                textColor: Colors.white,
+                fontSize: 16.0);
+
+            Navigator.push(context, MaterialPageRoute(builder: (_) {
+              // 目标页面，即一个 Widget
+              return HomePage();
+            }));
+          } else {
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+                msg: "login failed,please login again",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black45,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        }),
         TopColors(context),
       ],
     );
@@ -117,8 +132,7 @@ class _TopColorsState extends State<TopColors> {
 
           if (await canLaunch(url)) {
             await launch(url);
-          } else {
-          }
+          } else {}
         }
       }, placement: 'close');
     } else {
@@ -129,8 +143,7 @@ class _TopColorsState extends State<TopColors> {
 
       if (await canLaunch(url)) {
         await launch(url);
-      } else {
-      }
+      } else {}
     }
   }
 }
