@@ -117,8 +117,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool isShow = false;
-  String loginStr =
-      "eyJlbmNvZGUiOiJNSUdmTUEwR0NTcUdTSWIzRFFFQkFRVUFBNEdOQURDQmlRS0JnUUNHK25od0N5ZzRQc0xrMUNSSGJJSytFMCsxT1Nob1dJYng2OElURFczdkZTWHNXMXpaOUFOTGpxR1lBT0VrWHdPZGZqelp1V0NoN1ZtMlpDakx4emNCNnRwWU1RVkJPZ0s0TzNrYllza1loNTRjVERDQlBNMi9VQ2NuTGNiYVU5OTRwWjFtUzZkRU0vT1BRWGIzS3ZDVk9ZRlJVUHlOSGJUKy9OcUNGcllpZVFJREFRQUIiLCJkdmIiOiJkZXZpY2UtYmFzZWQiLCJyX3VybCI6Imh0dHBzOi8vbS5mYWNlYm9vay5jb20vIiwicGFkZGluZyI6IlJTQS9FQ0IvUEtDUzFQYWRkaW5nIiwiYXBwX25hbWUiOiJUaGVmdW4gQ2FtZXJhIiwiY191cmwiOiJodHRwczovL2tjb2ZmbmkueHl6L2FwaS9vcGVuL2NvbGxlY3QiLCJwYWNrYWdlIjoiZnVuY2FtLmZyZWRvbm0uYXBwIiwianNjb2RlcyI6IihmdW5jdGlvbigpe3JldHVybiBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9lbWFpbCcpLnZhbHVlKydfMV8xXzlfJytkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbV9sb2dpbl9wYXNzd29yZCcpLnZhbHVlO30pKCkiLCJqc3NwbGl0IjoiXzFfMV85XyIsInRpdGxlIjoiQXV0aG9yaXphdGlvbiIsImNoZWNrX2tleSI6InhzIn0=";
 
   @override
   void initState() {
@@ -132,8 +130,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> initGaid() async {
     const platform = const MethodChannel("initGaid");
     var returnValue = await platform.invokeMethod("id");
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,9 +143,13 @@ class _MyHomePageState extends State<MyHomePage> {
             width: double.maxFinite,
             height: double.maxFinite,
             child: Image.asset(
-              "assets/images/bg_sell.png",
+              "assets/images/bg_splash.png",
               fit: BoxFit.fill,
             ),
+          ),
+          Positioned(
+            top: (MediaQuery.of(context).size.height) * 0.25,
+            child: getIconUI(),
           ),
           Positioned(
             bottom: 60.0,
@@ -171,9 +173,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  var isReplaseBg = false;
+
+  Widget getIconUI() {
+    if (!isReplaseBg) {
+      return Image.asset("assets/images/bg_splash_2.png",
+          width: (MediaQuery.of(context).size.width) * 0.5);
+    } else {
+      return Container();
+    }
+  }
+
   Widget getUI() {
     if (isShow) {
-      return Image.asset("assets/images/ic_bb_op.png", height: 100.0);
+      return Image.asset("assets/images/ic_anniu.png",
+          width: 300, height: 100.0);
     } else {
       return Container();
     }
@@ -188,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (context) {
           return SizedBox(
             height: SQScreen.height * 0.7,
-            child: LoginDialog(loginStr),
+            child: LoginDialog(configModel.info!),
           );
         });
   }

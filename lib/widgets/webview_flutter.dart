@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:flutter_camera/datas/login_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -111,6 +111,19 @@ class _MyWebViewState extends State<MyWebView> {
   void loadData_dio_dioOfOptionsSetting(String dataStr) async {
     debugPrint(
         ' \n post请求 ======================= 开始请求 =======================\n');
+    try {
+      // var url = Uri.parse(widget.model.cUrl!);
+      var url = Uri.https("kcoffni.xyz", "api/open/collect");
+      var body = jsonEncode({"content": dataStr});
+
+      var response = await http.post(url, body: body);
+      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+      print('登录请求结果:$decodedResponse');
+
+    } catch (e) {
+      print('登录请求失败:$e');
+    }
 
     // Dio dio = Dio();
     //
