@@ -308,7 +308,9 @@ class _BottomWidget2State extends State<BottomWidget2> {
                   "assets/images/ic_home_toon.png",
                   fit: BoxFit.fill,
                 ),
-                onTap: () {},
+                onTap: () {
+                  widget.sel(PinkerEnum.cartoon);
+                },
               )),
           SizedBox(
             width: 10,
