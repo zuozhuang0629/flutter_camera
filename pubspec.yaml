@@ -48,7 +48,6 @@ dependencies:
   quiver: ^3.0.0
   video_player: ^2.1.4
   fluttertoast: ^8.0.9
-  sticker_view: ^0.0.2
   file_picker: ^5.0.1
 dev_dependencies:
   flutter_test:

@@ -24,6 +24,42 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<void> pickImg(PinkerEnum type) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+
+    if (result == null) {
+      Fluttertoast.showToast(
+          msg: "picker image cancel",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black45,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return;
+    }
+    selPath = result.files.single.path;
+    switch (type) {
+      case PinkerEnum.filler:
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return FilterPage();
+        }));
+        break;
+      case PinkerEnum.sticker:
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return StickerPage();
+        }));
+        break;
+      case PinkerEnum.cartoon:
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return CartoonPage();
+        }));
+        break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -60,8 +96,12 @@ class _HomePageState extends State<HomePage> {
                     "assets/images/ic_home_bg.png",
                     fit: BoxFit.fill,
                   ),
-                  BottomWidget1(),
-                  BottomWidget2(),
+                  BottomWidget1((type) {
+                    pickImg(type);
+                  }),
+                  BottomWidget2((type) {
+                    pickImg(type);
+                  }),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -101,7 +141,9 @@ class _HomePageState extends State<HomePage> {
 
 //第一排按钮
 class BottomWidget1 extends StatefulWidget {
-  BottomWidget1({Key? key}) : super(key: key);
+  Function(PinkerEnum) sel;
+
+  BottomWidget1(this.sel, {Key? key}) : super(key: key);
 
   @override
   State<BottomWidget1> createState() => _BottomWidget1State();
@@ -165,43 +207,13 @@ class _BottomWidget1State extends State<BottomWidget1> {
                   fit: BoxFit.fill,
                 ),
                 onTap: () {
-                  pickImg(PinkerEnum.filler);
+                  widget.sel(PinkerEnum.filler);
                   // MaxUtils.getInstance().showInter((isShowCall) {
                   //
                   // });
                 },
               )),
         ]));
-  }
-
-  Future<void> pickImg(PinkerEnum type) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-
-    if (result == null) {
-      Fluttertoast.showToast(
-          msg: "picker image cancel",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.black45,
-          textColor: Colors.white,
-          fontSize: 16.0);
-      return;
-    }
-    selPath = result.files.single.path;
-    switch (type) {
-      case PinkerEnum.filler:
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return FilterPage();
-        }));
-        break;
-      case PinkerEnum.sticker:
-        break;
-      case PinkerEnum.cartoon:
-        break;
-    }
   }
 
   Future<int?> changeModel() async {
@@ -260,7 +272,9 @@ class _BottomWidget1State extends State<BottomWidget1> {
 
 //第二排按钮
 class BottomWidget2 extends StatefulWidget {
-  BottomWidget2({Key? key}) : super(key: key);
+  Function(PinkerEnum) sel;
+
+  BottomWidget2(this.sel, {Key? key}) : super(key: key);
 
   @override
   State<BottomWidget2> createState() => _BottomWidget2State();
@@ -279,7 +293,9 @@ class _BottomWidget2State extends State<BottomWidget2> {
                   "assets/images/ic_home_ker.png",
                   fit: BoxFit.fill,
                 ),
-                onTap: () {},
+                onTap: () {
+                  widget.sel(PinkerEnum.sticker);
+                },
               )),
           SizedBox(
             width: 10,
