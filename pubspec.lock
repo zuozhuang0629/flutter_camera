@@ -120,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.4"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -476,6 +483,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  sticker_view:
+    dependency: "direct main"
+    description:
+      name: sticker_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   stream_channel:
     dependency: transitive
     description:

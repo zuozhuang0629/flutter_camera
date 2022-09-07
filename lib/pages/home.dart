@@ -1,4 +1,5 @@
 import 'package:applovin_max/applovin_max.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_camera/dialogs/out_dailog.dart';
 import 'package:flutter_camera/maxUitls/max_utils.dart';
@@ -6,9 +7,11 @@ import 'package:flutter_camera/pages/camera_page.dart';
 import 'package:flutter_camera/pages/cartoon_page.dart';
 import 'package:flutter_camera/pages/filter_page.dart';
 import 'package:flutter_camera/pages/sticker_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../enums/pinker_enum.dart';
 import '../main.dart';
 import '../maxUitls/max_ad_id.dart';
 import '../utils/mlog.dart';
@@ -162,12 +165,43 @@ class _BottomWidget1State extends State<BottomWidget1> {
                   fit: BoxFit.fill,
                 ),
                 onTap: () {
-                  MaxUtils.getInstance().showInter((isShowCall) {
-
-                  });
+                  pickImg(PinkerEnum.filler);
+                  // MaxUtils.getInstance().showInter((isShowCall) {
+                  //
+                  // });
                 },
               )),
         ]));
+  }
+
+  Future<void> pickImg(PinkerEnum type) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+
+    if (result == null) {
+      Fluttertoast.showToast(
+          msg: "picker image cancel",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black45,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return;
+    }
+    selPath = result.files.single.path;
+    switch (type) {
+      case PinkerEnum.filler:
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return FilterPage();
+        }));
+        break;
+      case PinkerEnum.sticker:
+        break;
+      case PinkerEnum.cartoon:
+        break;
+    }
   }
 
   Future<int?> changeModel() async {
