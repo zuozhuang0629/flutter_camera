@@ -92,6 +92,9 @@ class _HomePageState extends State<HomePage> {
               ),
               Column(
                 children: <Widget>[
+                  Container(
+                    height: 100,
+                  ),
                   Image.asset(
                     "assets/images/ic_home_bg.png",
                     fit: BoxFit.fill,

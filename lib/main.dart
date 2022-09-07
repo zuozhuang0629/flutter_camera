@@ -236,6 +236,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }
 
         if (configModel.l == 0 || await spGetBool()) {
+        // if (configModel.l == 0 || await spGetBool()) {
           setState(() {
             isShow = false;
           });
