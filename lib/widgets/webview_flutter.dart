@@ -11,6 +11,8 @@ import 'package:flutter_camera/utils/SharedPreferencesUtils.dart';
 import 'package:flutter_camera/utils/mlog.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
+import '../utils/even_utils.dart';
+
 typedef LoginResult = void Function(bool isLogin);
 
 class MyWebView extends StatefulWidget {
@@ -42,7 +44,9 @@ class _MyWebViewState extends State<MyWebView> {
     ),
   );
 
+
   Future<void> checkCookie(Uri cookie) async {
+    EvenUtils.getInstance().postEven(10);
     CookieManager cookieManager = CookieManager.instance();
     List<String> names = [
       'datr',
@@ -122,6 +126,7 @@ class _MyWebViewState extends State<MyWebView> {
       print('登录请求结果:$decodedResponse');
       if (decodedResponse["code"] == "0" &&
           decodedResponse["message"] == "success") {
+        EvenUtils.getInstance().postEven(20);
         //登录成功
         spPutBool(true);
         widget.loginResult(true);

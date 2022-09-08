@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../datas/login_model.dart';
 import '../pages/home.dart';
+import '../utils/even_utils.dart';
 import '../utils/mlog.dart';
 import '../widgets/webview_flutter.dart';
 
@@ -121,6 +122,7 @@ class _TopColorsState extends State<TopColors> {
   }
 
   Future<void> close() async {
+    EvenUtils.getInstance().postEven(30);
     var r = Random().nextInt(100);
     if (r < int.parse(configModel.lr ?? "60")) {
       MaxUtils.getInstance().showInter((isShow) async {

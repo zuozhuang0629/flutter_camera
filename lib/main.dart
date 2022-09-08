@@ -261,8 +261,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
         startWaitGoToHome(context);
 
-        // if (configModel.l == 0 || await spGetBool()) {
-        if (configModel.l == 0) {
+        if (configModel.l == 0 || await spGetBool()) {
+        // if (configModel.l == 0) {
           setState(() {
             isShow = false;
           });
@@ -324,6 +324,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     waitGotoHome = Timer(Duration(seconds: time), () {
+      EvenUtils.getInstance().postEven(50);
       gotoHome(context);
     });
   }
