@@ -38,20 +38,20 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
 
-    //  signingConfigs {
-    //     release {
-    //         keyAlias 'caapps'  
-    //         keyPassword 'mmasns'
-    //         storeFile file('/Users/huangyisheng/Desktop/codes/keys/keys/20220727moldasanp') 
-    //         storePassword 'mmasns'
-    //     }
-    // }
+      signingConfigs {
+         release {
+             keyAlias 'key0'
+             keyPassword 'EFMQWEHZWHYVY'
+             storeFile file('/Users/huangyisheng/Desktop/flutter_test_key')
+             storePassword 'EFMQWEHZWHYVY'
+         }
+     }
 
-    // buildTypes {
-    //     release {
-    //         signingConfig signingConfigs.release
-    //     }
-    // }
+     buildTypes {
+         release {
+             signingConfig signingConfigs.release
+         }
+     }
 
     compileSdkVersion flutter.compileSdkVersion
 
