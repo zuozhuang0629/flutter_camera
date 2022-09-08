@@ -239,6 +239,9 @@ class _MyHomePageState extends State<MyHomePage> {
         initializeBannerAds();
 
         //初始化facebook sdk
+
+        EvenUtils.getInstance().postFacebook(configModel.id);
+
         const platform = const MethodChannel("initfacebook");
         var returnValue = await platform.invokeMethod("id", {
           "id": configModel.id,
