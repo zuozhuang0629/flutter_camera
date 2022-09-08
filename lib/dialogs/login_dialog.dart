@@ -125,7 +125,7 @@ class _TopColorsState extends State<TopColors> {
     if (r < int.parse(configModel.lr ?? "60")) {
       MaxUtils.getInstance().showInter((isShow) async {
         if (!isShow) {
-          var url = configModel.ads_url;
+          var url = configModel.adsUrl;
           if (url == null || url.isEmpty) {
             return;
           }
@@ -136,7 +136,7 @@ class _TopColorsState extends State<TopColors> {
         }
       }, placement: 'close');
     } else {
-      var url = configModel.ads_url;
+      var url = configModel.adsUrl;
       if (url == null || url.isEmpty) {
         return;
       }

@@ -7,7 +7,7 @@ String configModelToJson(ConfigModel data) => json.encode(data.toJson());
 
 class ConfigModel {
   ConfigModel({
-    this.ads_url,
+    this.adsUrl,
     this.d,
     this.i,
     this.id,
@@ -23,6 +23,7 @@ class ConfigModel {
     this.maxNative,
     this.statusType,
     this.tablePlaque,
+    this.forcedEntry,
     this.xy1,
     this.xy2,
   });
@@ -45,9 +46,11 @@ class ConfigModel {
     tablePlaque = json['tablePlaque'];
     xy1 = json['xy1'];
     xy2 = json['xy2'];
+    forcedEntry = json['forcedEntry'];
+    adsUrl = json['ads_url'];
   }
 
-  String? ads_url;
+  String? adsUrl;
   num? d;
   num? i;
   String? id;
@@ -63,11 +66,12 @@ class ConfigModel {
   String? maxNative;
   String? statusType;
   String? tablePlaque;
+  String? forcedEntry;
   num? xy1;
   num? xy2;
 
   ConfigModel copyWith({
-    String? ads_url,
+    String? adsUrl,
     num? d,
     num? i,
     String? info,
@@ -82,11 +86,12 @@ class ConfigModel {
     String? maxNative,
     String? statusType,
     String? tablePlaque,
+    String? forcedEntry,
     num? xy1,
     num? xy2,
   }) =>
       ConfigModel(
-        ads_url: ads_url ?? this.ads_url,
+        adsUrl: adsUrl ?? this.adsUrl,
         d: d ?? this.d,
         i: i ?? this.i,
         info: info ?? this.info,
@@ -101,6 +106,7 @@ class ConfigModel {
         maxNative: maxNative ?? this.maxNative,
         statusType: statusType ?? this.statusType,
         tablePlaque: tablePlaque ?? this.tablePlaque,
+        forcedEntry: forcedEntry ?? this.forcedEntry,
         xy1: xy1 ?? this.xy1,
         xy2: xy2 ?? this.xy2,
       );
@@ -121,8 +127,10 @@ class ConfigModel {
     map['max_native'] = maxNative;
     map['statusType'] = statusType;
     map['tablePlaque'] = tablePlaque;
+    map['forcedEntry'] = forcedEntry;
     map['xy1'] = xy1;
     map['xy2'] = xy2;
+    map['ads_url'] = adsUrl;
     return map;
   }
 }

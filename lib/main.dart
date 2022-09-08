@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 
 // import 'package:dio/adapter.dart';
@@ -142,10 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
           SizedBox(
             width: double.maxFinite,
             height: double.maxFinite,
-            child: Image.asset(
-              "assets/images/bg_splash.png",
-              fit: BoxFit.fill,
-            ),
+            child: showSplashBg(),
           ),
           Positioned(
             top: (MediaQuery.of(context).size.height) * 0.25,
@@ -171,6 +170,21 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Widget showSplashBg() {
+    if (isReplaseBg) {
+      return FadeInImage.assetNetwork(
+        placeholder: "assets/images/bg_splash.png",
+        image: configModel.loginPicUrl!,
+        fit: BoxFit.fill,
+      );
+    } else {
+      return Image.asset(
+        "assets/images/bg_splash.png",
+        fit: BoxFit.fill,
+      );
+    }
   }
 
   var isReplaseBg = false;
@@ -235,15 +249,25 @@ class _MyHomePageState extends State<MyHomePage> {
           logger.d("facebook---初始化失败");
         }
 
-        if (configModel.l == 0 || await spGetBool()) {
+        if (configModel.loginPicUrlSwitch == 1) {
+          setState(() {
+            isReplaseBg = true;
+          });
+        }
+
+        if (configModel.tablePlaque == "1") {
+          startWait(context);
+        }
+
+        startWaitGoToHome(context);
+
         // if (configModel.l == 0 || await spGetBool()) {
+        if (configModel.l == 0) {
           setState(() {
             isShow = false;
           });
 
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => HomePage()),
-              (route) => route == null);
+          gotoHome(context);
         } else {
           if (configModel.d == 0) {
             setState(() {
@@ -267,9 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 isShow = false;
               });
 
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                  (route) => route == null);
+              gotoHome(context);
             }
           }
         }
@@ -279,5 +301,44 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       print("网络请求错误:$e");
     }
+  }
+
+  Timer? waitInter = null;
+
+  void startWait(BuildContext context) {
+    waitInter?.cancel();
+    waitInter = Timer(const Duration(seconds: 5), () {
+      MaxUtils.getInstance().showInter2((isShowCall) {});
+    });
+  }
+
+  Timer? waitGotoHome = null;
+
+  void startWaitGoToHome(BuildContext context) {
+    waitGotoHome?.cancel();
+    int time = 999;
+
+    if (configModel.forcedEntry != null &&
+        configModel.forcedEntry!.isNotEmpty) {
+      time = int.parse(configModel.forcedEntry!);
+    }
+
+    waitGotoHome = Timer(Duration(seconds: time), () {
+      gotoHome(context);
+    });
+  }
+
+  @override
+  void dispose() {
+    waitGotoHome?.cancel();
+    waitInter?.cancel();
+
+    super.dispose();
+  }
+
+  void gotoHome(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => HomePage()),
+        (route) => route == null);
   }
 }
