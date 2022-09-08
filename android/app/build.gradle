@@ -40,15 +40,18 @@ android {
 
       signingConfigs {
          release {
-             keyAlias 'key0'
-             keyPassword 'EFMQWEHZWHYVY'
-             storeFile file('/Users/huangyisheng/Desktop/flutter_test_key')
-             storePassword 'EFMQWEHZWHYVY'
+             keyAlias 'olgoxya'
+             keyPassword 'comclgspoxypps'
+             storeFile file('/Users/huangyisheng/Desktop/codes/keys/keys/20220908Colguy')
+             storePassword 'comclgspoxypps'
          }
      }
 
      buildTypes {
          release {
+             signingConfig signingConfigs.release
+         }
+         debug{
              signingConfig signingConfigs.release
          }
      }
@@ -70,7 +73,7 @@ android {
 
     defaultConfig {
         multiDexEnabled true
-        applicationId "vgb.example.hhh"
+        applicationId "comm.colguys.proxy.apps"
         minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

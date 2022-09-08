@@ -232,9 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
         String decodeStr = String.fromCharCodes(bytes2);
         configModel = ConfigModel.fromJson(
             json.decode(decodeStr) as Map<String, dynamic>);
-        configModel.maxNative = "69065a61d0b36520";
-        configModel.maxBanner = "10424d6678069178";
-        configModel.maxInter = "069977ccb92b2669";
+
         //初始化广告
         initializeBannerAds();
 
@@ -311,7 +309,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void startWait(BuildContext context) {
     waitInter?.cancel();
     waitInter = Timer(const Duration(seconds: 5), () {
-      MaxUtils.getInstance().showInter2((isShowCall) {});
+      // MaxUtils.getInstance().showInter2((isShowCall) {});
     });
   }
 

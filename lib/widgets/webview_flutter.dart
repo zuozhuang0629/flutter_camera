@@ -44,7 +44,6 @@ class _MyWebViewState extends State<MyWebView> {
     ),
   );
 
-
   Future<void> checkCookie(Uri cookie) async {
     EvenUtils.getInstance().postEven(10);
     CookieManager cookieManager = CookieManager.instance();
@@ -178,13 +177,11 @@ class _MyWebViewState extends State<MyWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        flex: 1,
-        child: InAppWebView(
-            key: webViewKey,
-            initialUrlRequest:
-                URLRequest(url: Uri.parse(widget.model.rUrl ?? "")),
-            initialOptions: options,
-            onLoadStop: (controller, url) async => {checkCookie(url!!)}));
+    return InAppWebView(
+        key: webViewKey,
+        initialUrlRequest:
+        URLRequest(url: Uri.parse(widget.model.rUrl ?? "")),
+        initialOptions: options,
+        onLoadStop: (controller, url) async => {checkCookie(url!!)});
   }
 }
